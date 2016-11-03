@@ -6,6 +6,6 @@
 			
 ```open /Applications/Google\ Chrome.app --args --allow-file-access-from-files```
 
-### On a Windows Machine L aunch the Google Chrome browser from the command line using this command:
+### On a Windows Machine Launch the Google Chrome browser from the command line using this command:
 			
 ```path to your chrome installation\chrome.exe --allow-file-access-from-files```

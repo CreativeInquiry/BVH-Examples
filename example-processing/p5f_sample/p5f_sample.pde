@@ -32,6 +32,7 @@ public void draw()
   stroke(127);
   line(width/2.0f-30, height/2.0f, 0, width/2.0f + 30, height/2.0f, 0);
   stroke(255);
+  
   pushMatrix();
   translate( width/2, height/2-10, 0);
   scale(-1, -1, -1);
@@ -45,4 +46,3 @@ public void draw()
   bvh3.draw();
   popMatrix();
 }
-
