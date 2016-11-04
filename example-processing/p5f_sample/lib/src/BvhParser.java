@@ -357,9 +357,10 @@ public class BvhParser {
     {
       _lineStr = __lineStr;
       _lineStr = _lineStr.trim();
-      _lineStr = _lineStr.replace("\t", "");
+      _lineStr = _lineStr.replace("\t", " ");
       _lineStr = _lineStr.replace("\n", "");
       _lineStr = _lineStr.replace("\r", "");  
+
       
       String[] words = _lineStr.split(" ");
     

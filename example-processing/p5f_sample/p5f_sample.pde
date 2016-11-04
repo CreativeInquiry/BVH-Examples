@@ -9,9 +9,7 @@ public void setup()
   noStroke();
   frameRate( 30 );
   
-  bvh1 = new PBvh( loadStrings( "A_test.bvh" ) );
-  bvh2 = new PBvh( loadStrings( "B_test.bvh" ) );
-  bvh3 = new PBvh( loadStrings( "C_test.bvh" ) );
+  bvh1 = new PBvh( loadStrings( "Brekel_03_11_2016_15_47_42_body1.bvh" ) );
 
   loop();
 }
@@ -39,10 +37,6 @@ public void draw()
   
   //model
   bvh1.update( millis() );
-  bvh2.update( millis() );
-  bvh3.update( millis() );
   bvh1.draw();
-  bvh2.draw();
-  bvh3.draw();
   popMatrix();
 }
