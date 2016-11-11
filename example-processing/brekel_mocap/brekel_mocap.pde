@@ -2,6 +2,7 @@
 // Note: mouseX controls the camera.
 
 PBvh myBrekelBvh;
+boolean bDrawMeat = true; 
 
 //------------------------------------------------
 void setup() {
@@ -13,7 +14,9 @@ void setup() {
 
 //------------------------------------------------
 void draw() {
+  lights() ;
   background(0, 0, 0);
+  bDrawMeat = (second()%2 == 0);
 
   setMyCamera();        // Position the camera. See code below.
   drawMyGround();       // Draw the ground. See code below.
