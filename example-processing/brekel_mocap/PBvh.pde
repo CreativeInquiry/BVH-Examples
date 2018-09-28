@@ -18,7 +18,7 @@ class PBvh
   //------------------------------------------------
   void draw() {
     // Previous method of drawing, provided by Rhizomatiks/Perfume
-    
+
     fill(color(255));
     for ( BvhBone b : parser.getBones()) {
       pushMatrix();
@@ -130,12 +130,35 @@ class PBvh
 
         String boneName = aBone.getName(); 
         if (boneName.equals("Head")) { 
-          pushMatrix();
-          translate( x1, y1, z1);
-          noFill();
-          ellipse(0, 0, 30, 30);
+
+          pushMatrix(); 
+          translate(x1, y1, z1);
+          sphereDetail(6, 6);
+          sphere(20); 
           popMatrix();
         }
+      }
+    }
+  }
+
+
+  //------------------------------------------------
+  void calculateScreenspaceLocationOfBone(String whichBoneName) {
+    List<BvhBone> theBvhBones = parser.getBones();
+    int nBones = theBvhBones.size();       // How many bones are there?
+    for (int i=0; i<nBones; i++) {         // Loop over all the bones
+      BvhBone aBone = theBvhBones.get(i);  // Get the i'th bone
+
+      String boneName = aBone.getName(); 
+      if (boneName.equals(whichBoneName)){ // "Head")) { 
+
+        PVector boneCoord1 = aBone.absEndPos;  // Get its start point
+        float x1 = boneCoord1.x;
+        float y1 = boneCoord1.y;
+        float z1 = boneCoord1.z;
+
+        boneScreenX = screenX(x1, y1, z1); // setting some app globals
+        boneScreenY = screenY(x1, y1, z1);
       }
     }
   }

@@ -1,4 +1,3 @@
-//package com.rhizomatiks.bvh;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,21 +10,21 @@ import processing.core.PVector;
 public class BvhParser {
 
   private Boolean _motionLoop;
-  
+
   private int _currentFrame = 0;
-  
+
   private List<BvhLine> _lines;
-  
+
   private int _currentLine;
   private BvhBone _currentBone;
-  
+
   private BvhBone _rootBone;
   private List<List<Float>> _frames;
   private int _nbFrames;
   private float _frameTime;
-  
+
   private List<BvhBone> _bones;
-  
+
   public BvhParser()
   {
     _motionLoop = true;
@@ -38,7 +37,7 @@ public class BvhParser {
   {
     return _motionLoop;
   }
-  
+
   /**
    * set Loop state
    * @param value
@@ -54,9 +53,9 @@ public class BvhParser {
    */
   public String toStr()
   {
-	return _rootBone.structureToString();
+    return _rootBone.structureToString();
   }
-  
+
   /**
    * get frame total
    * @return
@@ -86,17 +85,17 @@ public class BvhParser {
     _bones = new ArrayList<BvhBone>();
     _motionLoop = true;
   }
-  
+
   /**
    * go to the frame at index
    */
   public void moveFrameTo(int __index)
   {
-    if(!_motionLoop)
+    if (!_motionLoop)
     {
-      if(__index >= _nbFrames)
+      if (__index >= _nbFrames)
         _currentFrame = _nbFrames-1;//last frame
-    }else{
+    } else {
       while (__index >= _nbFrames)
         __index -= _nbFrames;      
       _currentFrame = __index; //looped frame
@@ -113,50 +112,49 @@ public class BvhParser {
   {
     float frameTime = _frameTime * 1000;
     int curFrame = (int)(mills / frameTime); 
-    moveFrameTo( curFrame ); 
+    moveFrameTo( curFrame );
   }
-  
+
   /**
    * update bone position and rotation
    */
   public void update()
   {
-	  update( getBones().get(0) );
+    update( getBones().get(0) );
   }
-  
+
   protected void update(BvhBone bone )
   {
 
-	    PMatrix3D m = new PMatrix3D();
+    PMatrix3D m = new PMatrix3D();
 
-	    m.translate(bone.getXposition(), bone.getYposition(), bone.getZposition());
-	    m.translate(bone.getOffsetX(), bone.getOffsetY(), bone.getOffsetZ());
-	    
-	    m.rotateY(PApplet.radians(bone.getYrotation()));
-	    m.rotateX(PApplet.radians(bone.getXrotation()));
-	    m.rotateZ(PApplet.radians(bone.getZrotation()));
-	    
-	    bone.global_matrix = m;
+    m.translate(bone.getXposition(), bone.getYposition(), bone.getZposition());
+    m.translate(bone.getOffsetX(), bone.getOffsetY(), bone.getOffsetZ());
 
-	    if (bone.getParent() != null && bone.getParent().global_matrix != null)
-	      m.preApply(bone.getParent().global_matrix);
-	    m.mult(new PVector(), bone.getAbsPosition());
-	    
-	    if (bone.getChildren().size() > 0)
-	    {
-	      for (BvhBone child : bone.getChildren())
-	      {
-	        update(child);
-	      }
-	    }
-	    else
-	    {
-	      m.translate(bone.getEndOffsetX(), bone.getEndOffsetY(), bone.getEndOffsetZ());
-	      m.mult(new PVector(), bone.getAbsEndPosition());
-	    }
+    m.rotateY(PApplet.radians(bone.getYrotation()));
+    m.rotateX(PApplet.radians(bone.getXrotation()));
+    m.rotateZ(PApplet.radians(bone.getZrotation()));
+
+    bone.global_matrix = m;
+
+    if (bone.getParent() != null && bone.getParent().global_matrix != null)
+      m.preApply(bone.getParent().global_matrix);
+    m.mult(new PVector(), bone.getAbsPosition());
+
+    if (bone.getChildren().size() > 0)
+    {
+      for (BvhBone child : bone.getChildren())
+      {
+        update(child);
+      }
+    } else
+    {
+      m.translate(bone.getEndOffsetX(), bone.getEndOffsetY(), bone.getEndOffsetZ());
+      m.mult(new PVector(), bone.getAbsEndPosition());
+    }
   }
-  
-  
+
+
   private void _updateFrame()
   {
     if (_currentFrame >= _frames.size()) return;
@@ -166,32 +164,37 @@ public class BvhParser {
     {
       BvhBone bone = _getBoneInFrameAt(count);
       String prop = _getBonePropInFrameAt(count);
-      if(bone != null) {
+      if (bone != null) {
         Method getterMethod;
         try {
           getterMethod = bone.getClass().getDeclaredMethod("set".concat(prop), new Class[]{float.class});
           getterMethod.invoke(bone, n);
-        } catch (SecurityException e) {
+        } 
+        catch (SecurityException e) {
           e.printStackTrace();
           System.err.println("ERROR WHILST GETTING FRAME - 1");
-        } catch (NoSuchMethodException e) {
+        } 
+        catch (NoSuchMethodException e) {
           e.printStackTrace();
           System.err.println("ERROR WHILST GETTING FRAME - 2");
-        } catch (IllegalArgumentException e) {
+        } 
+        catch (IllegalArgumentException e) {
           e.printStackTrace();
           System.err.println("ERROR WHILST GETTING FRAME - 3");
-        } catch (IllegalAccessException e) {
+        } 
+        catch (IllegalAccessException e) {
           e.printStackTrace();
           System.err.println("ERROR WHILST GETTING FRAME - 4");
-        } catch (InvocationTargetException e) {
+        } 
+        catch (InvocationTargetException e) {
           e.printStackTrace();
           System.err.println("ERROR WHILST GETTING FRAME - 5");
         }
       }
       count++;
-    }      
+    }
   }    
-  
+
   private String _getBonePropInFrameAt(int n)
   {
     int c = 0;      
@@ -201,13 +204,13 @@ public class BvhParser {
       {
         n -= c;
         return bone.getChannels().get(n);
-      }else{
-        c += bone.getNbChannels();  
+      } else {
+        c += bone.getNbChannels();
       }
     }
     return null;
   }
-  
+
   private BvhBone _getBoneInFrameAt( int n)
   {
     int c = 0;      
@@ -219,30 +222,30 @@ public class BvhParser {
     }
     return null;
   }    
-  
+
   public void parse(String[] srces)
   {
     String[] linesStr = srces;
     // liste de BvhLines
     _lines = new ArrayList<BvhLine>();
-    
+
     for ( String lineStr : linesStr)
       _lines.add(new BvhLine(lineStr));
-      
+
     _currentLine = 1;
     _rootBone = _parseBone();
-    
+
     // center locs
     //_rootBone.offsetX = _rootBone.offsetY = _rootBone.offsetZ = 0; 
-    
+
     _parseFrames();
   }    
-  
+
   private void _parseFrames()
   {
     int currentLine = _currentLine;
     for (; currentLine < _lines.size(); currentLine++)
-      if(_lines.get(currentLine).getLineType() == BvhLine.MOTION) break; 
+      if (_lines.get(currentLine).getLineType() == BvhLine.MOTION) break; 
 
     if ( _lines.size() > currentLine) 
     {
@@ -251,7 +254,7 @@ public class BvhParser {
       currentLine++; //FrameTime
       _frameTime = _lines.get(currentLine).getFrameTime();
       currentLine++;
-  
+
       _frames = new ArrayList<List<Float>>();
       for (; currentLine < _lines.size(); currentLine++)
       {
@@ -259,31 +262,31 @@ public class BvhParser {
       }
     }
   }
-  
+
   private BvhBone _parseBone()
   {
     //_currentBone is Parent
     BvhBone bone = new BvhBone( _currentBone );
-    
+
     _bones.add(bone);
-    
+
     bone.setName(  _lines.get(_currentLine)._boneName ); //1
-    
+
     // +2 OFFSET
     _currentLine++; // 2 {
     _currentLine++; // 3 OFFSET
     bone.setOffsetX( _lines.get(_currentLine).getOffsetX() );
     bone.setOffsetY( _lines.get(_currentLine).getOffsetY() );
     bone.setOffsetZ( _lines.get(_currentLine).getOffsetZ() );
-      
+
     // +3 CHANNELS
     _currentLine++;
     bone.setnbChannels( _lines.get(_currentLine).getNbChannels() );
     bone.setChannels( _lines.get(_currentLine).getChannelsProps() );
-      
+
     // +4 JOINT or End Site or }
     _currentLine++;
-    while(_currentLine < _lines.size())
+    while (_currentLine < _lines.size())
     {
       String lineType = _lines.get(_currentLine).getLineType();
       if ( BvhLine.BONE.equals( lineType ) ) //JOINT or ROOT
@@ -291,8 +294,7 @@ public class BvhParser {
         BvhBone child = _parseBone(); //generate new BvhBONE
         child.setParent( bone );
         bone.getChildren().add(child);
-      }
-      else if( BvhLine.END_SITE.equals( lineType ) )
+      } else if ( BvhLine.END_SITE.equals( lineType ) )
       {
         _currentLine++; // {
         _currentLine++; // OFFSET
@@ -302,20 +304,19 @@ public class BvhParser {
         _currentLine++; //}
         _currentLine++; //}
         return bone;
-      } 
-      else if( BvhLine.BRACE_CLOSED.equals( lineType ) )
+      } else if ( BvhLine.BRACE_CLOSED.equals( lineType ) )
       {
         return bone; //}
       }
       _currentLine++;
     }
     System.out.println("//Something strage");
-    return bone;  
+    return bone;
   }    
-  
+
   private class BvhLine
   {
-  
+
     public static final String HIERARCHY = "HIERARCHY";
     public static final String BONE = "BONE";
     public static final String BRACE_OPEN = "BRACE_OPEN";
@@ -323,21 +324,21 @@ public class BvhParser {
     public static final String OFFSET = "OFFSET";
     public static final String CHANNELS = "CHANNELS";
     public static final String END_SITE = "END_SITE";
-    
+
     public static final String MOTION = "MOTION";
     public static final String FRAMES = "FRAMES";
     public static final String FRAME_TIME = "FRAME_TIME";
     public static final String FRAME = "FRAME";
-    
-    
+
+
     public static final String BONE_TYPE_ROOT = "ROOT";
     public static final String BONE_TYPE_JOINT = "JOINT";
-    
+
     private String _lineStr;
-    
+
     private String _lineType;
     private String _boneType;
-    
+
     private String _boneName;
     private float _offsetX;
     private float _offsetY;
@@ -347,14 +348,12 @@ public class BvhParser {
     private int _nbFrames;
     private float _frameTime;
     private List<Float> _frames;
-    
-    public String toString() 
-    {
+
+    public String toString() {
       return _lineStr;
     }
-    
-    private void _parse(String __lineStr)
-    {
+
+    private void _parse(String __lineStr) {
       _lineStr = __lineStr;
       _lineStr = _lineStr.trim();
       _lineStr = _lineStr.replace("\t", " ");
@@ -362,55 +361,51 @@ public class BvhParser {
       _lineStr = _lineStr.replace("\n", "");
       _lineStr = _lineStr.replace("\r", "");  
 
-      
+
       String[] words = _lineStr.split(" ");
-    
       _lineType = _parseLineType(words);
-      
-  //    
-      if ( HIERARCHY.equals(_lineType) )
-      {
+
+      if ( HIERARCHY.equals(_lineType) ) {
         return;
       } else if ( BONE.equals(_lineType) ) {
-          _boneType = (words[0] == "ROOT") ? BONE_TYPE_ROOT : BONE_TYPE_JOINT;
-          _boneName = words[1];
-          return;
+        _boneType = (words[0] == "ROOT") ? BONE_TYPE_ROOT : BONE_TYPE_JOINT;
+        _boneName = words[1];
+        return;
       } else if ( OFFSET.equals(_lineType) ) {
-          _offsetX = Float.valueOf(words[1]);
-          _offsetY = Float.valueOf(words[2]);
-          _offsetZ = Float.valueOf(words[3]);
-          return;
+        _offsetX = Float.valueOf(words[1]);
+        _offsetY = Float.valueOf(words[2]);
+        _offsetZ = Float.valueOf(words[3]);
+        return;
       } else if ( CHANNELS.equals(_lineType) ) {
-          _nbChannels = Integer.valueOf(words[1]);
-          _channelsProps = new ArrayList<String>();
-          for (int i = 0; i < _nbChannels; i++)
-            _channelsProps.add(words[i+2]);
-          return;
-        
+        _nbChannels = Integer.valueOf(words[1]);
+        _channelsProps = new ArrayList<String>();
+        for (int i = 0; i < _nbChannels; i++)
+          _channelsProps.add(words[i+2]);
+        return;
       } else if (FRAMES.equals(_lineType) ) {
-          _nbFrames = Integer.valueOf(words[1]);
-          return;
+        _nbFrames = Integer.valueOf(words[1]);
+        return;
       } else if ( FRAME_TIME.equals(_lineType) ) {
-          _frameTime = Float.valueOf(words[2]);
-          return;
+        _frameTime = Float.valueOf(words[2]);
+        return;
       } else if ( FRAME.equals(_lineType) ) {
-          _frames = new ArrayList<Float>();
-          for (String word : words) _frames.add(Float.valueOf(word));
-          return;
+        _frames = new ArrayList<Float>();
+        for (String word : words) _frames.add(Float.valueOf(word));
+        return;
       } else if ( END_SITE.equals(_lineType) ||
-            BRACE_OPEN.equals(_lineType) ||
-            BRACE_CLOSED.equals(_lineType) ||
-            MOTION.equals(_lineType)) {
-          return;
+        BRACE_OPEN.equals(_lineType) ||
+        BRACE_CLOSED.equals(_lineType) ||
+        MOTION.equals(_lineType)) {
+        return;
       }
     }  
-    
+
     private String _parseLineType( String[] __words) {
       //trace("'" + __words[0] + "' : " + __words[0].length);
       if ( "HIERARCHY".equals(__words[ 0 ] ) )
         return HIERARCHY;
       if ( "ROOT".equals(__words[ 0 ] ) ||
-          "JOINT".equals(__words[ 0 ] ) )
+        "JOINT".equals(__words[ 0 ] ) )
         return BONE;
       if ( "{".equals(__words[ 0 ] ) )
         return BRACE_OPEN;
@@ -428,74 +423,62 @@ public class BvhParser {
         return FRAMES;
       if ( "Frame".equals(__words[ 0 ] ) )
         return FRAME_TIME;
-    
+
       try {
         Float.parseFloat(__words[0]); //check is Parsable
-        return FRAME;  
-      } catch ( NumberFormatException e) {
+        return FRAME;
+      } 
+      catch ( NumberFormatException e) {
         e.printStackTrace();
       }
       return null;
     }
-  
-    
-    public BvhLine(String __lineStr)
-    {
+
+    public BvhLine(String __lineStr) {
       _parse(__lineStr);
     }
-    
-    public List<Float> getFrames()
-    {
+
+    public List<Float> getFrames() {
       return _frames;
     }
-    
-    public float getFrameTime()
-    {
+
+    public float getFrameTime() {
       return _frameTime;
     }
-    
-    public int getNbFrames()
-    {
+
+    public int getNbFrames() {
       return _nbFrames;
     }
-    
-    public List<String> getChannelsProps()
-    {
+
+    public List<String> getChannelsProps() {
       return _channelsProps;
     }
-    
-    public int getNbChannels()
-    {
+
+    public int getNbChannels() {
       return _nbChannels;
     }
-    
-    public float getOffsetZ()
-    {
+
+    public float getOffsetZ() {
       return _offsetZ;
     }
-    
-    public float getOffsetY()
-    {
+
+    public float getOffsetY() {
       return _offsetY;
     }
-    
-    public float getOffsetX()
-    {
+
+    public float getOffsetX() {
       return _offsetX;
     }
-    
-    public String getBoneName()
-    {
+
+    public String getBoneName() {
       return _boneName;
     }
-    
-    public String getBoneType()
-    {
+
+    public String getBoneType() {
       return _boneType;
     }
-    
-    public String getLineType()
-    {
+
+    public String getLineType() {
       return _lineType;
     }
   }

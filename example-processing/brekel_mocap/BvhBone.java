@@ -1,5 +1,3 @@
-//package com.rhizomatiks.bvh;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,32 +34,27 @@ public class BvhBone {
   
   public PMatrix3D global_matrix;
   
-  public BvhBone(BvhBone __parent) 
-  {
+  public BvhBone(BvhBone __parent){
     _parent = __parent;
     _channels = new ArrayList<String>();
     _children = new ArrayList<BvhBone>();
   }
   
-  public BvhBone()
-  {
+  public BvhBone(){
     _parent = null;
     _channels = new ArrayList<String>();
     _children = new ArrayList<BvhBone>();
   }
   
-  public String toString() 
-  {
+  public String toString(){
     return "[BvhBone] " + _name;
   }
   
-  public String structureToString()
-  {
+  public String structureToString(){
     return structureToString(0);
   }
   
-  public String structureToString(int __indent)
-  {
+  public String structureToString(int __indent){
     String res = "";
     for (int i = 0; i < __indent; i++)
       res += "=";
@@ -73,196 +66,153 @@ public class BvhBone {
     return res;
   }
   
+
   
-  
-  
-  
-  
-  
-  public String getName()
-  {
+  public String getName(){
     return _name;
   }
   
-  public void setName( String value)
-  {
+  public void setName( String value){
     _name = value;
   }
   
-  public Boolean isRoot()
-  {
+  public Boolean isRoot(){
     return (_parent == null);
   }
   
-  public Boolean hasChildren()
-  {
+  public Boolean hasChildren(){
     return _children.size() > 0;
   }
   
   
-  public List<BvhBone> getChildren()
-  {
+  public List<BvhBone> getChildren(){
     return _children;
   }
   
-  public void setChildren(List<BvhBone> value)
-  {
+  public void setChildren(List<BvhBone> value){
     _children = value;
   }
   
-  public BvhBone getParent()
-  {
+  public BvhBone getParent(){
     return _parent;
   }
   
   
-  public void setParent(BvhBone value)
-  {
+  public void setParent(BvhBone value){
     _parent = value;
   }
   
-  public List<String> getChannels()
-  {
+  public List<String> getChannels(){
     return _channels;
   }
   
-  public void setChannels(List<String> value)
-  {
+  public void setChannels(List<String> value){
     _channels = value;
   }
   
-  public int getNbChannels()
-  {
+  public int getNbChannels(){
     return _nbChannels;
   }
   
-  public void setnbChannels( int value )
-  {
+  public void setnbChannels( int value ){
     _nbChannels = value;
   }
   
   //------ position
   
-  public float getZrotation()
-  {
+  public float getZrotation(){
     return _Zrotation;
   }
   
-  public void setZrotation(float value)
-  {
+  public void setZrotation(float value){
     _Zrotation = value;
   }
   
-  public float getYrotation()
-  {
+  public float getYrotation(){
     return _Yrotation;
   }
   
-  
-  public void setYrotation(float value)
-  {
+  public void setYrotation(float value){
     _Yrotation = value;
   }
   
-  public float getXrotation()
-  {
+  public float getXrotation(){
     return _Xrotation;
   }
   
-  
-  public void setXrotation(float value)
-  {
+  public void setXrotation(float value){
     _Xrotation = value;
   }
   
-  
-  
-  public float getZposition()
-  {
+  public float getZposition(){
     return _Zposition;
   }
   
-  public void setZposition(float value)
-  {
+  public void setZposition(float value){
     _Zposition = value;
   }
   
-  public float getYposition()
-  {
+  public float getYposition(){
     return _Yposition;
   }
   
-  public void setYposition(float value)
-  {
+  public void setYposition(float value){
     _Yposition = value;
   }
   
-  public float getXposition()
-  {
+  public float getXposition(){
     return _Xposition;
   }
   
-  public void setXposition(float value)
-  {
+  public void setXposition(float value){
     _Xposition = value;
   }
   
-  public float getEndOffsetZ()
-  {
+  public float getEndOffsetZ(){
     return _endOffsetZ;
   }
-  public void setEndOffsetZ(float value)
-  {
+  
+  public void setEndOffsetZ(float value){
     _endOffsetZ = value;
   }
   
-  public float getEndOffsetY()
-  {
+  public float getEndOffsetY(){
     return _endOffsetY;
   }
   
-  public void setEndOffsetY(float value)
-  {
+  public void setEndOffsetY(float value){
     _endOffsetY = value;
   }
   
-  public float getEndOffsetX()
-  {
+  public float getEndOffsetX(){
     return _endOffsetX;
   }
   
-  public void setEndOffsetX(float value)
-  {
+  public void setEndOffsetX(float value){
     _endOffsetX = value;
   }
   
-  public float getOffsetZ()
-  {
+  public float getOffsetZ(){
     return _offsetZ;
   }
   
-  public void setOffsetZ(float value)
-  {
+  public void setOffsetZ(float value){
     _offsetZ = value;
   }
   
-  public float getOffsetY()
-  {
+  public float getOffsetY(){
     return _offsetY;
   }
   
-  public void setOffsetY(float value)
-  {
+  public void setOffsetY(float value){
     _offsetY = value;
   }
   
-  public float getOffsetX()
-  {
+  public float getOffsetX(){
     return _offsetX;
   }
   
-  public void setOffsetX(float value)
-  {
+  public void setOffsetX(float value){
     _offsetX = value;
   }
 
@@ -270,19 +220,15 @@ public class BvhBone {
     absPos = pos;
   }  
   
-  public PVector getAbsPosition()
-  {
+  public PVector getAbsPosition(){
     return absPos;
   }
   
-
-  public void setAbsEndPosition( PVector pos)
-  {
+  public void setAbsEndPosition( PVector pos){
     absEndPos = pos;
   }
   
-  public PVector getAbsEndPosition()
-  {
+  public PVector getAbsEndPosition(){
     return absEndPos;
   }
 }
